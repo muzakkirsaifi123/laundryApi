@@ -1,0 +1,12 @@
+# Config file for server start up
+database_hostname: # enter hostname of database
+database_name: # database name
+database_password: # database password if any
+database_port: # database port will default to 5432
+database_username: # database username
+pidfile: # optional server pid file
+server_hostname: # desired server hostname
+server_port: # server port
+version: "0.1"
+jwt_secret: # token secret, currently we are setting symmetric encryption but will move to asymmetric.
+jwt_refresher: # Refresh token secret.
