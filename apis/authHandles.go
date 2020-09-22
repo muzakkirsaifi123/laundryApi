@@ -1,6 +1,7 @@
-package lib
+package apis
 
 import (
+	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
@@ -16,28 +17,24 @@ func Authorizer(clientDB *store.Client, sessionToken func(session store.Session)
 			token, claims, err := jwtauth.FromContext(request.Context())
 
 			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
+				panic(err)
 			}
 
 			session := store.Session{UID: int(claims["UID"].(float64))}
 			err = session.Get(clientDB)
 
 			if err != nil {
-				http.Error(writer, "not authorized", http.StatusUnauthorized)
-				return
+				panic(errors.New("not authorized"))
 			}
 
 			dbToken, err := sessionToken(session)
 
 			if err != nil {
-				http.Error(writer, err.Error(), http.StatusInternalServerError)
-				return
+				panic(err)
 			}
 
 			if dbToken.Raw != token.Raw {
-				http.Error(writer, "not authorized", http.StatusUnauthorized)
-				return
+				panic(errors.New("not authorized"))
 			}
 
 			next.ServeHTTP(writer, request)

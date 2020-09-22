@@ -18,10 +18,10 @@ type Server struct {
 func New(host, port string) *Server {
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"http://laundryweb", "http://chrome"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowCredentials: true,
+		AllowedOrigins: []string{"*"},
+		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		//AllowCredentials: true,
 	}))
 	r.Use(middleware.Logger)
 	r.Use(middleware.RequestID)

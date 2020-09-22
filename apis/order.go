@@ -8,25 +8,33 @@ import (
 )
 
 func orderRouter(r chi.Router) {
-	r.Get("/{id}", func(writer http.ResponseWriter, request *http.Request) {
-		id := chi.URLParam(request, "id")
-		intId, err := strconv.Atoi(id)
+	r.Group(func(r chi.Router) {
+		r.Use(Auth(clientDB))
+		r.Get("/{id}", func(writer http.ResponseWriter, request *http.Request) {
+			id := chi.URLParam(request, "id")
+			intId, err := strconv.Atoi(id)
 
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusInternalServerError)
-			return
-		}
+			if err != nil {
+				http.Error(writer, err.Error(), http.StatusInternalServerError)
+				return
+			}
 
-		performGet(&store.Order{ID: intId}, writer)
-	})
-	r.Post("/", func(writer http.ResponseWriter, request *http.Request) {
-		performAdd(&store.Order{}, writer, request)
-	})
+			order := &store.Order{ID: intId}
+			fillModelWithData(order)
+			writeModelData(order, writer)
+		})
+		r.Post("/", func(writer http.ResponseWriter, request *http.Request) {
+			order := store.Order{}
+			jsonDecodeRequestBody(&order, request)
+			writeModelToStorage(&order)
+		})
 
-	r.Get("/", func(writer http.ResponseWriter, request *http.Request) {
-		urlQuery := request.URL.Query()
-		orders := make(store.Orders, 0)
+		r.Get("/", func(writer http.ResponseWriter, request *http.Request) {
+			urlQuery := request.URL.Query()
+			orders := make(store.Orders, 0)
 
-		getCollection(&orders, urlQuery, writer, request)
+			fillCollectionWithData(&orders, urlQuery)
+			writeCollectionData(&orders, writer)
+		})
 	})
 }
