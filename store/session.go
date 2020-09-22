@@ -12,6 +12,10 @@ type Session struct {
 	Expiration   string `json:"expiration"`
 }
 
+func (session *Session) Update(client *Client) error {
+	return nil
+}
+
 func (session *Session) Get(client *Client) error {
 	smt := fmt.Sprintf(`Select refresh_token, access_token from %s.public."Session" where uid = $1`, client.databaseName)
 	row := client.db.QueryRow(client.Ctxt, smt, session.UID)
