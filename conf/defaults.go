@@ -18,7 +18,7 @@ func SetDefaults() {
 	config.SetDefault("database_hostname", "localhost")
 	config.SetDefault("database_port", "5432")
 	config.SetDefault("database_username", "")
-	config.SetDefault("database_password", "Jeanalevante9423")
+	config.SetDefault("database_password", "")
 
 	if err != nil {
 		err = config.WriteConfigAs("application.yml")
