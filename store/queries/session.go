@@ -14,7 +14,7 @@ func GetSession(client *store.Client, userId int) (types.Session, error) {
 }
 
 func DeleteSessionForUser(client *store.Client, id int) error {
-	smt := `Delete from "Session" where uid = $1`
+	smt := `Delete from "Session" where user_id = $1`
 	_, err := client.Conn.Exec(smt, id)
 	return err
 }

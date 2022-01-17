@@ -84,7 +84,10 @@ func logOff(c *gin.Context) {
 		return
 	}
 
-	_ = sessionManager.DeleteSession(SESSION_NAME)
+	err = sessionManager.DeleteSession(SESSION_NAME)
+	if err != nil {
+		_ = c.Error(err)
+	}
 	c.Writer.WriteHeader(http.StatusOK)
 }
 
@@ -185,7 +188,7 @@ func AddControllers(router gin.IRouter, dbClient *store.Client) {
 	router.Use(storeConnector)
 	router.POST("/signup", signup)
 	router.POST("/login", login)
-	router.POST("/logOff", logOff)
+	router.POST("/logoff", logOff)
 	securedGroup := router.Group("/admin")
 	securedGroup.Use(authorizer)
 	businessRouter(securedGroup)

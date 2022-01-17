@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jchenriquez/laundromat/auth/cookies"
@@ -76,6 +77,7 @@ func (sm SessionManager) SaveSession(session Session) error {
 	accessToken, expirationTime, err := sm.jwtManager.GenerateAccessToken(securedSession.Flashes)
 	refreshToken, _, err := sm.jwtManager.GenerateRefreshToken(securedSession.Flashes)
 
+	expirationInSeconds := expirationTime.Unix() - time.Now().Unix()
 	if err != nil {
 		return err
 	}
@@ -92,7 +94,9 @@ func (sm SessionManager) SaveSession(session Session) error {
 		return err
 	}
 
-	cookie, err := sm.cookiesManager.SessionCookie(securedSession.Flashes, securedSession.Name, expirationTime)
+	cookie, err := sm.cookiesManager.SessionCookie(
+		securedSession.Flashes, securedSession.Name, expirationTime, int(expirationInSeconds),
+	)
 
 	if err != nil {
 		return err
@@ -109,6 +113,7 @@ func (sm SessionManager) DeleteSession(name string) error {
 	}
 
 	cookie.MaxAge = -1
+	cookie.Expires = time.Now()
 	val, err := sm.cookiesManager.DecodeCookieValue(cookie)
 
 	if err != nil {

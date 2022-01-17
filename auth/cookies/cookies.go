@@ -9,7 +9,7 @@ import (
 )
 
 type Manager interface {
-	SessionCookie(values map[string]interface{}, name string, expires time.Time) (http.Cookie, error)
+	SessionCookie(values map[string]interface{}, name string, expires time.Time, maxAgeSeconds int) (http.Cookie, error)
 	DecodeCookieValue(cookie *http.Cookie) (map[string]interface{}, error)
 }
 
@@ -31,7 +31,9 @@ func NewCookieManager() Manager {
 	return cookieStore
 }
 
-func (cg cookieGenerator) SessionCookie(values map[string]interface{}, name string, expires time.Time) (
+func (cg cookieGenerator) SessionCookie(
+	values map[string]interface{}, name string, expires time.Time, maxAgeSeconds int,
+) (
 	http.Cookie, error,
 ) {
 	sc := securecookie.New(cg.hashKey, cg.blockKey)
@@ -50,6 +52,7 @@ func (cg cookieGenerator) SessionCookie(values map[string]interface{}, name stri
 		Secure:   false,
 		HttpOnly: true,
 		Expires:  expires,
+		MaxAge:   maxAgeSeconds,
 	}, nil
 }
 
