@@ -2,33 +2,28 @@ package server
 
 import (
 	"context"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
-	"github.com/go-chi/cors"
 	"net"
 	"net/http"
-	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
-	Router  chi.Router
+	Router  gin.IRouter
 	mServer http.Server
 }
 
 func New(host, port string) *Server {
-	r := chi.NewRouter()
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedHeaders: []string{"Accept", "Authorization", "Content-Type"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		//AllowCredentials: true,
-	}))
-	r.Use(middleware.Logger)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.RealIP)
-	r.Use(middleware.Recoverer)
-	r.Use(middleware.AllowContentType("application/json"))
-	r.Use(middleware.Timeout(60 * time.Second))
+	r := gin.Default()
+	r.Use(
+		cors.New(cors.Config{
+			AllowOrigins: []string{"*"},
+			AllowHeaders: []string{"Accept", "Authorization", "Content-Type"},
+			AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			// AllowCredentials: true,
+		}),
+	)
 
 	return &Server{
 		Router: r,

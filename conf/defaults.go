@@ -1,13 +1,14 @@
 package conf
 
 import (
-	config "github.com/spf13/viper"
 	"log"
+
+	config "github.com/spf13/viper"
 )
 
 func SetDefaults() {
 
-	config.SetConfigFile("./application.yaml")
+	config.SetConfigFile("./application.yml")
 	err := config.ReadInConfig()
 	config.SetDefault("pidFile", "./pid")
 	config.SetDefault("version", "0.1")
@@ -20,7 +21,7 @@ func SetDefaults() {
 	config.SetDefault("database_password", "Jeanalevante9423")
 
 	if err != nil {
-		err = config.WriteConfigAs("application.yaml")
+		err = config.WriteConfigAs("application.yml")
 
 		if err != nil {
 			log.Fatal(err)

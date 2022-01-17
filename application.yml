@@ -1,0 +1,20 @@
+# Config file for server start up
+database_hostname: #Enter hostname of database
+database_port: #Enter port of database
+database_name: # database name
+database_username: # database username
+database_password: # database password
+distance_api_key: # api key for distance service
+smtp_username: # smtp username
+smtp_password: # smtp password
+smtp_host: #smtp host
+smtp_port: #smtp port
+pidfile: .pid
+server_hostname:
+server_port:
+version: "0.1"
+jwt:
+  secret:
+  refreshsecret:
+  expirationhours: 0
+  expirationminutes: 5
