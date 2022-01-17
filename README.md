@@ -2,7 +2,7 @@
 Restful api servers for the laundrymat app.
 
 ## Installation instructions:
-    TODO:
+    go install
 ## Docker instructions:
    TODO:
 ## Server start instructions:
